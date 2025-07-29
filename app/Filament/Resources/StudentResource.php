@@ -23,7 +23,28 @@ class StudentResource extends Resource
     {
         return $form
             ->schema([
-                //
+
+                Forms\Components\TextInput::make('name')
+                ->label('Student Name')
+                ->required()
+                ->maxLength(255),
+
+                Forms\Components\TextInput::make('email')
+                ->label('Email')
+                ->email()
+                ->required(),
+             
+                Forms\Components\TextInput::make('phone')
+                ->label('Phone')
+                ->maxLength(15),
+
+                Forms\Components\Select::make('class_id')
+                ->label('Class')
+                ->relationship('classModel', 'name')
+                ->native(false)
+                ->searchable()
+                ->required(),
+                    
             ]);
     }
 
@@ -31,10 +52,14 @@ class StudentResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('email'),
+                Tables\Columns\TextColumn::make('phone'),
+
             ])
             ->filters([
-                //
+                Tables\Filters\Filter::make('verified')
+                ->query(fn (Builder $query): Builder => $query->whereNotNull('email_verified_at')),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

@@ -23,7 +23,15 @@ class ClassModelResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\TextInput::make('name')
+                    ->label('Class Name')
+                    ->required(),
+
+                Forms\Components\Select::make('teacher_id')
+                    ->relationship('teacher', 'name') 
+                    ->label('Teacher')
+                    ->searchable()
+                    ->required(),
             ]);
     }
 
@@ -31,7 +39,10 @@ class ClassModelResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make ('name'),
+                Tables\Columns\TextColumn::make ('teacher.name')
+                ->label('Teacher'),
+
             ])
             ->filters([
                 //

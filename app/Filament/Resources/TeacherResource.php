@@ -23,7 +23,31 @@ class TeacherResource extends Resource
     {
         return $form
             ->schema([
-                //
+
+                Forms\Components\TextInput::make('name')
+                ->label('Teacher Name')
+                ->required()
+                ->maxLength(255),
+
+            
+                Forms\Components\TextInput::make('email')
+                ->label('Email')
+                ->email()
+                ->required(),
+
+          
+                Forms\Components\TextInput::make('phone')
+                ->label('Phone')
+                ->tel()
+                ->maxLength(15)
+                ->required(),
+
+                Forms\Components\Select::make('class_id')
+                ->relationship('classModel', 'name') 
+                ->label('Class')
+                ->native(false)
+                ->required(),
+                
             ]);
     }
 
@@ -31,17 +55,20 @@ class TeacherResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('email'),
+                Tables\Columns\TextColumn::make('phone'),
             ])
             ->filters([
-                //
+                Tables\Filters\Filter::make('verified')
+                    ->query(fn (Builder $query): Builder => $query->whereNotNull('email_verified_at')),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make(), 
                 ]),
             ]);
     }
